@@ -13,6 +13,10 @@ html {
   font-size: 100%;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -47,9 +51,7 @@ img {
 }
 
 .stats,
-.cards,
-.laptop,
-.contactSectionMain {
+.laptop {
   flex-wrap: wrap;
 }
 
@@ -300,6 +302,7 @@ span a {
   align-items: center;
 
   background-color: var(--dark-purple);
+  height: 20vh;
   padding: 50px;
   margin: 10px 30px;
   border-radius: 80px;
@@ -308,6 +311,17 @@ span a {
   font-weight: 700;
   color: var(--white);
   word-spacing: 8px;
+}
+
+.group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5em;
+}
+
+.group-hidden {
+  display: none;
 }
 
 .stat {
@@ -323,6 +337,7 @@ span a {
   align-items: center;
   flex-direction: column;
   gap: 70px;
+  padding: 0 2em;
 
   padding: 4rem 8rem;
 }
@@ -338,9 +353,11 @@ span a {
 
 .cards {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   gap: 3em;
+
+  padding: 0 5em;
 }
 
 .card {
@@ -375,6 +392,100 @@ span a {
   height: 1px;
   background-color: var(--gray);
 }
+
+.cards {
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;;
+
+    padding-inline: calc((100vw - 320px) / 2);
+    margin: 2em auto;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    anchor-name: --cards;
+    scroll-snap-type: x mandatory;
+    scroll-marker-group: after;
+  }
+
+  .cards::scroll-marker-group{
+    display: flex;
+    justify-content: center;
+    gap: .5em;
+  }
+
+  .cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cards::scroll-button(right),
+  .cards::scroll-button(left) {
+    content: "→";
+    font-size: 2rem;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    border: none;
+    font-weight: 600;
+    text-align: left;
+    background-color: var(--dark-purple);
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    position-anchor: --cards;
+    position-area: right center;
+    transition: .2s ease-in-out;
+    opacity: 1;
+    transform: translate(-50%);
+  }
+
+  .cards::scroll-button(left) {
+    content: "←";
+    position-area: left center;
+    transform: translate(50%);
+  }
+
+  .cards::scroll-button(right):disabled,
+  .cards::scroll-button(left):disabled {
+    transform: scale(0);
+    transition: .2s ease-in-out;
+    opacity: 0;
+    background-color: rgba(77, 6, 77, 0.507);
+  }
+
+  .card {
+    scroll-snap-align: center;
+    flex: 0 0 432px;
+    display: flex;
+    justify-content: center;
+    height: 20em;
+    flex-direction: column;
+    text-align: center;
+    gap: 1em;
+    padding: 10px 10px;
+    margin: 20px auto;
+  }
+
+  .card::scroll-marker{
+    display: block;
+    content: '';
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    background-color: var(--dark-gray);
+  }
+
+  .card::scroll-marker:target-current{
+    background-color: var(--dark-purple);
+  }
+
+  .card > * {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+
 
 .faculty {
   display: flex;
@@ -417,7 +528,7 @@ span a {
 }
 
 .facultyCard {
-  transform: translate(125px, 0);
+  position: relative;
 }
 
 .facultyCard img:first-child {
@@ -437,8 +548,8 @@ span a {
 
 .facultyCard img:nth-child(2) {
   height: 298px;
-  position: relative;
-  right: 236px;
+  position: absolute;
+  right: 0;
   width: 230px;
   border-radius: 50px;
 }
@@ -466,6 +577,7 @@ span a {
   font-size: 3rem;
   margin: 35px auto;
   color: var(--dark-purple);
+  text-align: center;
 }
 
 .question {
@@ -529,7 +641,12 @@ span a {
   align-items: center;
   flex-direction: row;
   gap: 20vw;
-  height: 40vh;
+  height: 40%;
+}
+
+.messageArea {
+  height: 18em;
+  border-radius: 0;
 }
 
 .contactSectionMain textarea,
@@ -543,7 +660,8 @@ span a {
 }
 
 .contactSectionMain textarea {
-  width: 400px;
+  width: 35vw;
+  height: 3em;
   padding: 12px 0px 0 38px;
   color: var(--white);
   border-radius: 20px;
@@ -561,11 +679,6 @@ span a {
   font-size: 1.2rem;
 }
 
-.messageArea {
-  height: 150px;
-  border-radius: 0;
-}
-
 .contactRight,
 .contactLeft {
   display: flex;
@@ -577,7 +690,6 @@ span a {
 
 .contactRight {
   align-items: flex-start;
-  width: 20vw;
 }
 
 .contactRight div {
@@ -629,12 +741,242 @@ footer {
     gap: 40px;
   }
 
-  .cards {
-    gap: 2rem;
+  .contactSectionMain {
+    gap: 4rem;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+    transition: 0.3s ease-in-out;
+  }
+
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+    transition: 0.3s ease-in-out;
+  }
+
+  .searchBar {
+    width: 100px;
+    height: auto;
+  }
+
+  .searchBar textarea {
+    border-radius: 10px;
+    line-height: 1;
+    margin-right: 10px;
+    height: 35px;
+  }
+
+  .menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    padding-bottom: 20px;
+    width: 100vw;
+
+    background-color: rgba(128, 128, 128, 0.248);
+
+    position: fixed;
+    top: 7vh;
+    left: -200%;
+
+    transition: 0.3s ease-in-out;
+  }
+
+  .menu.active {
+    left: 0;
+  }
+
+  .Socials {
+    justify-content: center;
+    padding-left: 0;
+  }
+
+  .stats {
+    border-radius: 0;
+    margin: 0px 0;
+    padding: 20px 0;
+  }
+
+  .carousal {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .carousal::-webkit-scrollbar {
+    display: none;
+    scroll-behavior: none;
+  }
+
+  .group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+    animation: spin 3s infinite linear;
+    padding-right: 2em;
+  }
+
+  .stat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 0 0 5em;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  @keyframes spin {
+    from {
+      translate: 0;
+    }
+    to {
+      translate: -100%;
+    }
+  }
+
+  footer {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .contactSection h3 {
+    font-size: 2rem;
+  }
+
+  .contactSection span {
+    font-size: 1.2rem;
+    text-align: center;
   }
 
   .contactSectionMain {
-    gap: 4rem;
+    flex-direction: column;
+    font-size: 1em;
+  }
+
+  .contactLeft textarea {
+    width: 70vw;
+  }
+
+  .contactRight textarea:nth-child(3) {
+    height: 18em;
+  }
+
+  .messageArea {
+    height: 18em;
+  }
+
+  .facultyCards {
+    flex-direction: column;
+  }
+
+  .question {
+    font-size: 1rem;
+  }
+
+  .question img {
+    height: 20px;
+    width: 20px;
+  }
+
+  .cardSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    padding: 0 2em;
+  }
+
+  .cardSection h3 {
+    margin: 2em auto;
+    width: 50%;
+    text-align: center;
+  }
+
+  .cards {
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;;
+
+    padding-inline: calc((100vw - 320px) / 2);
+    margin: 2em auto;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    transition: 3s ease-in-out;
+    anchor-name: --cards;
+    scroll-snap-type: x mandatory;
+  }
+
+  .cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cards::scroll-button(right),
+  .cards::scroll-button(left) {
+    content: "→";
+    font-size: 2rem;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    border: none;
+    font-weight: 600;
+    text-align: left;
+    background-color: var(--dark-purple);
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    position-anchor: --cards;
+    position-area: right center;
+    transition: .2s ease-in-out;
+    opacity: 1;
+    transform: translate(-50%);
+  }
+
+  .cards::scroll-button(left) {
+    content: "←";
+    position-area: left center;
+    transform: translate(50%);
+  }
+
+  .cards::scroll-button(right):disabled,
+  .cards::scroll-button(left):disabled {
+    transform: scale(0);
+    transition: .2s ease-in-out;
+    opacity: 0;
+    background-color: rgba(77, 6, 77, 0.507);
+  }
+
+  .card {
+    scroll-snap-align: center;
+    flex: 0 0 100%;
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    height: 20em;
+    flex-direction: column;
+    text-align: left;
+    gap: 1em;
+    padding: 10px 10px;
+    margin: 20px auto;
+  }
+
+  .card > * {
+    max-width: 320px;
+    margin: 0 auto;
   }
 }
 
@@ -728,63 +1070,5 @@ footer {
   .Socials {
     justify-content: center;
     padding-left: 0;
-  }
-
-  .stats {
-    border-radius: 0;
-    margin: 0px 0;
-    padding: 20px 0;
-  }
-
-  .carousal {
-    width: 100%;
-    display: flex;
-    overflow-x: auto;
-  }
-
-  .carousal::-webkit-scrollbar {
-    display: none;
-    scroll-behavior: none;
-  }
-
-  .group {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2em;
-    animation: spin 3s infinite linear;
-    padding-right: 2em;
-  }
-
-  .stat {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    flex: 0 0 5em;
-    font-size: 1.2rem;
-    text-align: center;
-  }
-
-  @keyframes spin {
-    from {
-      translate: 0;
-    }
-    to {
-      translate: -100%;
-    }
-  }
-
-  .cards {
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .card {
-    flex: 0 0 10em;
-    height: 12em;
   }
 }
